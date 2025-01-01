@@ -1,59 +1,90 @@
-import { client } from '@/sanity/lib/client';
-import { urlFor } from '@/sanity/lib/image';
-import { GetStaticProps } from 'next';
 
-// Define the type for blog post
-interface BlogPost {
-  _id: string;
-  title: string;
-  description: string;
-  images: Array<{ asset: { _ref: string } }>;
-}
+import { useState } from 'react';
+import { useRouter } from 'next/router';
 
-// Fetch data using getStaticProps
-export const getStaticProps: GetStaticProps = async () => {
-  const query = `*[_type == "blog"]{
-    _id,
-    title,
-    description,
-    images
-  }`;
+const BlogForm = () => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState<File | null>(null);
+  const router = useRouter();
 
-  const posts = await client.fetch(query);
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  return {
-    props: {
-      posts,
-    },
+    try {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      if (image) {
+        formData.append('image', image);
+      }
+
+      const response = await fetch('/api/createBlog', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          image: null, // Update this logic if you’re uploading the image
+        }),
+      });
+
+      if (response.ok) {
+        router.push('/post'); // Redirect to `/post` page
+      } else {
+        console.error('Failed to create blog:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error submitting blog:', error);
+    }
   };
-};
 
-interface HomeProps {
-  posts: BlogPost[];
-}
-
-const Home = ({ posts }: HomeProps) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {posts.map((post) => (
-        <div key={post._id} className="bg-white shadow-lg rounded-lg overflow-hidden">
-          <div className="relative w-full h-48">
-            {post.images && post.images.length > 0 && (
-              <img
-                src={urlFor(post.images[0].asset._ref).width(400).height(250).url()}
-                alt={post.title}
-                className="object-cover w-full h-full"
-              />
-            )}
-          </div>
-          <div className="p-6">
-            <h2 className="text-2xl font-bold text-gray-800">{post.title}</h2>
-            <p className="mt-4 text-gray-600">{post.description}</p>
-          </div>
+    <div className="max-w-2xl mx-auto p-4">
+      <h1 className="text-4xl font-bold mb-4">Create a Blog</h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="title" className="block font-medium">Title</label>
+          <input
+            id="title"
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full border rounded-md p-2"
+            required
+          />
         </div>
-      ))}
+        <div>
+          <label htmlFor="description" className="block font-medium">Description</label>
+          <textarea
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full border rounded-md p-2"
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="image" className="block font-medium">Image</label>
+          <input
+            id="image"
+            type="file"
+            onChange={(e) => setImage(e.target.files?.[0] || null)}
+            className="w-full border rounded-md p-2"
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded-md"
+        >
+          Submit
+        </button>
+      </form>
     </div>
   );
 };
 
-export default Home;
+export default BlogForm;

@@ -1,23 +1,26 @@
 // schemas/blog.js
 export default {
     name: 'blog',
-    title: 'Blog Post',
+    title: 'Blog',
     type: 'document',
     fields: [
       {
         name: 'title',
+        title: 'Title',
         type: 'string',
-        title: 'Blog Title',
       },
       {
         name: 'description',
+        title: 'Description',
         type: 'text',
-        title: 'Blog Description',
       },
       {
         name: 'image',
+        title: 'Image',
         type: 'image',
-        title: 'Blog Image',
+        options: {
+          hotspot: true,
+        },
       },
     ],
   };

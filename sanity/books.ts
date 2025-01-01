@@ -13,31 +13,37 @@ import { defineType } from "sanity"
             },
             {
                 name: 'price',
-                type: 'number',
-                title: 'price'
+                type: 'string',
+                title: 'Author'
             },
+            // {
+            //     name: 'description',
+            //     type: 'text',
+            //     title: 'Description',
+                
+            //   },
             {
-                name: 'description',
-                type: 'text',
-                title: 'Description',
-                // of: [
-                //   {
-                //     type: 'block',
-                //     styles: [
-                //       { title: 'Normal', value: 'normal' },
-                //       { title: 'Heading 1', value: 'h1' },
-                //       { title: 'Heading 2', value: 'h2' },
-                //       { title: 'Heading 3', value: 'h3' },
-                //     ],
-                //     marks: {
-                //       decorators: [
-                //         { title: 'Bold', value: 'strong' },
-                //         { title: 'Italic', value: 'em' },
-                //         { title: 'Underline', value: 'underline' },
-                //       ],
-                //     },
-                //   },
-                // ],
+                name: 'content',
+                type: 'array',
+                title: 'Content',
+                of: [
+                  {
+                    type: 'block',
+                    // styles: [
+                    //   { title: 'Normal', value: 'normal' },
+                    //   { title: 'Heading 1', value: 'h1' },
+                    //   { title: 'Heading 2', value: 'h2' },
+                    //   { title: 'Heading 3', value: 'h3' },
+                    // ],
+                    // marks: {
+                    //   decorators: [
+                    //     { title: 'Bold', value: 'strong' },
+                    //     { title: 'Italic', value: 'em' },
+                    //     { title: 'Underline', value: 'underline' },
+                    //   ],
+                    // },
+                  },
+                ],
               },
             {
                 name: "imageUrl",
