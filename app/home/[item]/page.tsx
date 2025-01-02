@@ -19,7 +19,16 @@ interface IBook {
   content:any
 }
 
-export default function BlogPage({ params }: { params: { item?: string } }) {
+interface BlogPageProps {
+  params: {
+    item?: string;
+  };
+}
+
+export default function BlogPage
+  ({ params }: BlogPageProps)
+  // { params }: { params: { item?: string } }) 
+  {
   const [books, setBooks] = useState<IBook[]>([]);
   const [loading, setLoading] = useState(true);
 
