@@ -22,12 +22,14 @@ interface IBook {
 
 interface BlogPageProps {
   params: { item?: string };
+  searchParams: { [key: string]: string | string[] | undefined };
 }
 
 // export default async function BlogPage(
 //  { params }: { params: { item?: string } }) 
 //   {
-  export default function BlogPage({ params }: BlogPageProps) {
+  export default function BlogPage({ params, searchParams }: BlogPageProps) {
+
   const [books, setBooks] = useState<IBook[]>([]);
   const [loading, setLoading] = useState(true);
 
